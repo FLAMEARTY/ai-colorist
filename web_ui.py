@@ -14,7 +14,7 @@ import colorsys
 # Настройка страницы
 st.set_page_config(page_title="ИИ-Колорист PRO", page_icon="🎨", layout="centered")
 
-# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v29.3) ---
+# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v29.4) ---
 st.markdown("""
     <style>
     .stApp { background-color: #222224 !important; }
@@ -28,7 +28,6 @@ st.markdown("""
         }
     }
     
-    /* ТОЧНЫЙ КОНТРОЛЬ ТЕКСТА: никаких слепых overrides для глобальных div и span! */
     .stApp .block-container p, .stApp .block-container label, .stApp .block-container caption {
         color: #fafafa !important; font-size: 1.02rem !important; line-height: 1.3 !important;
     }
@@ -50,12 +49,25 @@ st.markdown("""
     }
     button[data-testid="baseButton-secondary"]:hover { background-color: #48484a !important; color: #ffffff !important; }
     
-    /* ИСПРАВЛЕНИЕ КОНТРАСТА ВЫПАДАЮЩЕГО СПИСКА (SELECTBOX) */
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] {
+    /* ЖЕСТКОЕ ИСПРАВЛЕНИЕ КОНТРАСТА СЕЛЕКТБОКСА (ЗАКРЫТЫЙ И ОТКРЫТЫЙ РЕЖИМЫ) */
+    div[data-testid="stSelectbox"] > div {
+        background-color: transparent !important;
+    }
+    div[data-testid="stSelectbox"] [data-baseweb="select"] {
         background-color: #3a3a3c !important; border: 1px solid #48484a !important; border-radius: 12px !important;
     }
-    div[data-testid="stSelectbox"] div[data-baseweb="select"] * {
-        color: #ffffff !important;
+    div[data-testid="stSelectbox"] [data-baseweb="select"] * {
+        color: #ffffff !important; background-color: transparent !important;
+    }
+    /* Стилизация выпадающего popover-меню со списком брендов */
+    div[data-baseweb="popover"] ul {
+        background-color: #3a3a3c !important; border: 1px solid #48484a !important;
+    }
+    div[data-baseweb="popover"] li {
+        color: #ffffff !important; background-color: transparent !important;
+    }
+    div[data-baseweb="popover"] li:hover {
+        background-color: #48484a !important;
     }
     
     /* ИСПРАВЛЕНИЕ КОНТРАСТА ЗАГРУЗЧИКА ФАЙЛОВ (FILE UPLOADER) */
@@ -115,7 +127,7 @@ def load_all_paints_v23():
         "Royal Talens Van Gogh (Акрил/Масло)": {
             "Titanium White (105)": [255, 255, 255], "Naples Yellow Light (222)": [250, 224, 172],
             "Azo Yellow Light (268)": [255, 221, 0], "Azo Orange (276)": [247, 120, 32],
-            "Azo Red Light (312)": [222, 34, 40], "Quinacridone Rose (366)": [196, 20, 94],
+            "Azo Red Light (312)": [222, 34, 44], "Quinacridone Rose (366)": [196, 20, 94],
             "Ultramarine (504)": [38, 50, 156], "Cerulean Blue Phthalo (535)": [0, 114, 179],
             "Permanent Green Deep (619)": [16, 112, 58], "Yellow Ochre (227)": [204, 150, 69],
             "Burnt Umber (409)": [77, 52, 41], "Vandyke Brown (403)": [56, 43, 38],
@@ -331,7 +343,7 @@ if uploaded_file is not None:
 
         if st.session_state.calibration_mode: st.warning("🎯 Тапните в белую/серую точку на фото!")
 
-        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v29_3")
+        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v29_4")
         if value is not None:
             cx, cy = value["x"], value["y"]
             if st.session_state.calibration_mode:
@@ -399,7 +411,7 @@ if uploaded_file is not None:
                 col_toggle_l, col_toggle_r = st.columns(2)
                 with col_toggle_l:
                     b2_type = "primary" if st.session_state.active_num == 2 else "secondary"
-                    if st.button("🔍 2 пигмента", use_container_width=True, type=b2_type, disabled=(2 not in options)):
+                    if st.button("✌️ 2 пигмента", use_container_width=True, type=b2_type, disabled=(2 not in options)):
                         st.session_state.active_num = 2
                         st.rerun()
                 with col_toggle_r:
