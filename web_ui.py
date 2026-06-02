@@ -14,7 +14,7 @@ import colorsys
 # Настройка страницы
 st.set_page_config(page_title="ИИ-Колорист PRO", page_icon="🎨", layout="centered")
 
-# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v29.4) ---
+# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v29.5) ---
 st.markdown("""
     <style>
     .stApp { background-color: #222224 !important; }
@@ -49,34 +49,21 @@ st.markdown("""
     }
     button[data-testid="baseButton-secondary"]:hover { background-color: #48484a !important; color: #ffffff !important; }
     
-    /* ЖЕСТКОЕ ИСПРАВЛЕНИЕ КОНТРАСТА СЕЛЕКТБОКСА (ЗАКРЫТЫЙ И ОТКРЫТЫЙ РЕЖИМЫ) */
-    div[data-testid="stSelectbox"] > div {
-        background-color: transparent !important;
-    }
+    /* ЖЕСТКОЕ ИСПРАВЛЕНИЕ КОНТРАСТА СЕЛЕКТБОКСА */
+    div[data-testid="stSelectbox"] > div { background-color: transparent !important; }
     div[data-testid="stSelectbox"] [data-baseweb="select"] {
         background-color: #3a3a3c !important; border: 1px solid #48484a !important; border-radius: 12px !important;
     }
-    div[data-testid="stSelectbox"] [data-baseweb="select"] * {
-        color: #ffffff !important; background-color: transparent !important;
-    }
-    /* Стилизация выпадающего popover-меню со списком брендов */
-    div[data-baseweb="popover"] ul {
-        background-color: #3a3a3c !important; border: 1px solid #48484a !important;
-    }
-    div[data-baseweb="popover"] li {
-        color: #ffffff !important; background-color: transparent !important;
-    }
-    div[data-baseweb="popover"] li:hover {
-        background-color: #48484a !important;
-    }
+    div[data-testid="stSelectbox"] [data-baseweb="select"] * { color: #ffffff !important; background-color: transparent !important; }
+    div[data-baseweb="popover"] ul { background-color: #3a3a3c !important; border: 1px solid #48484a !important; }
+    div[data-baseweb="popover"] li { color: #ffffff !important; background-color: transparent !important; }
+    div[data-baseweb="popover"] li:hover { background-color: #48484a !important; }
     
-    /* ИСПРАВЛЕНИЕ КОНТРАСТА ЗАГРУЗЧИКА ФАЙЛОВ (FILE UPLOADER) */
+    /* ИСПРАВЛЕНИЕ КОНТРАСТА ЗАГРУЗЧИКА ФАЙЛОВ */
     div[data-testid="stFileUploader"] section {
         background-color: #3a3a3c !important; border: 1px dashed #48484a !important; border-radius: 12px !important; padding: 12px !important;
     }
-    div[data-testid="stFileUploader"] section * {
-        color: #ffffff !important;
-    }
+    div[data-testid="stFileUploader"] section * { color: #ffffff !important; }
     
     div[data-testid="stRadio"] div[data-baseweb="radio"] { padding: 4px 10px !important; background-color: #3a3a3c !important; border-radius: 10px !important; margin-right: 8px !important; }
     div[data-testid="stMultiSelect"] div[data-baseweb="select"] { background-color: #3a3a3c !important; border: 1px solid #48484a !important; border-radius: 12px !important; }
@@ -86,7 +73,10 @@ st.markdown("""
     .geo-badge { font-size: 0.85rem !important; color: #8a8a8f !important; text-align: center; margin-top: 8px !important; }
     
     .target-color-box { border-radius: 12px; border: 2px solid #ffffff; margin-top: 6px; margin-bottom: 4px; height: 40px; display: flex; align-items: center; justify-content: center; }
+    
+    /* ФИКС ЦВЕТА НАЗВАНИЙ КРАСОК */
     .paint-drop-container { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 12px; }
+    .paint-drop-container * { color: #ffffff !important; }
     .paint-blob { width: 14px; height: 14px; border-radius: 50%; margin-top: 2px; flex-shrink: 0; box-shadow: none !important; border: none !important; }
     </style>
 """, unsafe_allow_html=True)
@@ -343,7 +333,7 @@ if uploaded_file is not None:
 
         if st.session_state.calibration_mode: st.warning("🎯 Тапните в белую/серую точку на фото!")
 
-        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v29_4")
+        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v29_5")
         if value is not None:
             cx, cy = value["x"], value["y"]
             if st.session_state.calibration_mode:
@@ -447,11 +437,12 @@ if uploaded_file is not None:
                         p_hex = '#{:02x}{:02x}{:02x}'.format(*p_rgb)
                         
                         weight_str = f" → <b>{g} г.</b>" if st.session_state.user_role == "decorator" else ""
+                        # ВШИТЫ СТИЛИ ЦВЕТА НАПРЯМУЮ: color: #ffffff !important;
                         st.markdown(f"""
                         <div class="paint-drop-container">
                             <div class="paint-blob" style="background-color: {p_hex};"></div>
-                            <div style="font-size: 1.02rem; line-height: 1.3;">
-                                <strong>{paint}</strong>:<br>
+                            <div style="font-size: 1.02rem; line-height: 1.3; color: #ffffff !important;">
+                                <strong style="color: #ffffff !important;">{paint}</strong>:<br>
                                 <span style="color: #d1d1d6; font-weight: 700;">{percent}%</span>{weight_str}
                             </div>
                         </div>
@@ -469,11 +460,12 @@ if uploaded_file is not None:
                             p_hex = '#{:02x}{:02x}{:02x}'.format(*p_rgb)
                             
                             weight_str = f" → <b>{g} г.</b>" if st.session_state.user_role == "decorator" else ""
+                            # ВШИТЫ СТИЛИ ЦВЕТА НАПРЯМУЮ: color: #ffffff !important;
                             st.markdown(f"""
                             <div class="paint-drop-container">
                                 <div class="paint-blob" style="background-color: {p_hex};"></div>
-                                <div style="font-size: 1.02rem; line-height: 1.3; color: #8a8a8f !important;">
-                                    <strong>{paint}</strong>:<br>
+                                <div style="font-size: 1.02rem; line-height: 1.3; color: #ffffff !important;">
+                                    <strong style="color: #ffffff !important;">{paint}</strong>:<br>
                                     <span style="color: #d1d1d6; font-weight: 700;">{percent}%</span>{weight_str}
                                 </div>
                             </div>
@@ -500,7 +492,7 @@ if uploaded_file is not None:
                 """, height=55)
 
                 de = data['delta_e']
-                if de < 1.0: st.caption(f"✨ Идеальное совпадение CIEDE2000 (ΔE: {round(de, 2)})")
+                if de < 1.0: st.caption(f"✨ Идеальное совкадение CIEDE2000 (ΔE: {round(de, 2)})")
                 elif de < 3.0: st.caption(f"👌 Профессиональная точность (ΔE: {round(de, 2)})")
                 else: st.warning(f"⚠️ Тон близок к пределу палитры (ΔE: {round(de, 2)})")
 
