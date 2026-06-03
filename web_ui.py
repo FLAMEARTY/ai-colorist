@@ -14,7 +14,7 @@ import colorsys
 # Настройка страницы
 st.set_page_config(page_title="ИИ-Колорист PRO", page_icon="🎨", layout="centered")
 
-# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v39.0) ---
+# --- СТРОГИЙ ВЫСОКОКОНТРАСТНЫЙ МИНИМАЛИСТИЧНЫЙ ИНТЕРФЕЙС (v41.1) ---
 st.markdown("""
     <style>
     .stApp { background-color: #222224 !important; }
@@ -82,7 +82,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --- ПОЛНАЯ АУТЕНТИЧНАЯ БАЗА МАСЛА «МАСТЕР-КЛАСС» [R, G, B, Density] ---
+# --- ВСЕОБЪЕМЛЮЩАЯ МУЛЬТИБРЕНДОВАЯ БАЗА ДАННЫХ КРАСОК [R, G, B, Density] ---
 def load_all_paints_v32():
     return {
         "Невская Палитра (Масло Мастер-Класс)": {
@@ -115,6 +115,26 @@ def load_all_paints_v32():
             "Вишневая Тавуш (356)": [120, 30, 45, 1.3], "Красно-коричневая Вайк (414)": [135, 50, 40, 1.3],
             "Фиолетово-коричневая Севан (428)": [90, 45, 65, 1.3], "Гутанкарская фиолетовая (619)": [105, 55, 115, 1.3], "Зеленая Котайк (735)": [75, 95, 65, 1.3]
         },
+        "Tikkurila Symphony (Интерьерный веер)": {
+            "База AP (Супербелая)": [250, 250, 248, 1.4], "F300 (Жасмин)": [242, 232, 208, 1.2], 
+            "H300 (Персик)": [247, 214, 173, 1.2], "M300 (Глина)": [194, 157, 126, 1.3], 
+            "V381 (Аметист)": [142, 134, 156, 1.2], "N494 (Нефрит)": [84, 115, 102, 1.2], 
+            "База C (Глубокий чёрный/Тон)": [40, 41, 43, 1.1]
+        },
+        "Интерьерная палитра RAL (Классика)": {
+            "RAL 9016 (Транспортный белый)": [247, 249, 250, 1.4], "RAL 1015 (Слоновая кость)": [230, 214, 184, 1.3],
+            "RAL 1018 (Цинково-желтый)": [247, 211, 43, 1.3], "RAL 3020 (Трафиковый красный)": [187, 30, 16, 1.3],
+            "RAL 5002 (Ультрамариново-синий)": [22, 43, 115, 1.2], "RAL 6002 (Лиственно-зеленый)": [50, 102, 46, 1.2],
+            "RAL 7016 (Антрацитово-серый)": [56, 62, 66, 1.3], "RAL 9005 (Глубокий черный)": [14, 14, 16, 1.1]
+        },
+        "Husky (Интерьерные краски)": {
+            "Husky Superwhite (Супербелая)": [255, 255, 255, 1.4],
+            "Husky Тёплый песок": [235, 215, 185, 1.2],
+            "Husky Скандинавский серый": [180, 185, 190, 1.3],
+            "Husky Морской бриз": [160, 195, 210, 1.2],
+            "Husky Полярная ночь (Тёмно-синий)": [35, 45, 65, 1.1],
+            "Husky База C (Прозрачная под колер)": [45, 45, 47, 1.1]
+        },
         "Citadel Base (Warhammer / Миниатюры)": {
             "Corax White (Белый)": [240, 242, 245, 1.4], "Abaddon Black (Черный)": [10, 10, 10, 1.0],
             "Mephiston Red (Красный)": [154, 14, 24, 1.2], "Macragge Blue (Синий)": [15, 41, 130, 1.2],
@@ -126,16 +146,33 @@ def load_all_paints_v32():
 
 ALL_PALETTES = load_all_paints_v32()
 
+# --- СТРОГИЕ МАРКЕТИНГОВЫЕ ДАННЫЕ И УКРЫВИСТОСТЬ РАСХОДА МАТЕРИАЛА ---
 def get_market_and_coverage_data():
     try:
         res = requests.get("http://ip-api.com/json/", timeout=1.5).json()
         country, city = res.get("countryCode", "RU"), res.get("city", "Москва")
     except:
         country, city = "RU", "Локальная сеть"
-    return city, "руб.", {}, {}
+    
+    coverage_rates = {
+        "Невская Палитра (Масло Мастер-Класс)": 180, 
+        "Tikkurila Symphony (Интерьерный веер)": 120,
+        "Интерьерная палитра RAL (Классика)": 120,
+        "Husky (Интерьерные краски)": 125,
+        "Citadel Base (Warhammer / Миниатюры)": 130
+    }
+    
+    if country == "RU":
+        currency = "руб."
+        price_rates = { "Невская Палитра (Масло Мастер-Класс)": 580, "Tikkurila Symphony (Интерьерный веер)": 210, "Интерьерная палитра RAL (Классика)": 180, "Husky (Интерьерные краски)": 195, "Citadel Base (Warhammer / Миниатюры)": 450 }
+    else:
+        currency = "€"
+        price_rates = { "Невская Палитра (Масло Мастер-Класс)": 9.5, "Tikkurila Symphony (Интерьерный веер)": 3.8, "Интерьерная палитра RAL (Классика)": 3.4, "Husky (Интерьерные краски)": 3.6, "Citadel Base (Warhammer / Миниатюры)": 4.5 }
+        
+    return city, currency, price_rates, coverage_rates
 
 if "geo_cache" not in st.session_state: st.session_state.geo_cache = get_market_and_coverage_data()
-current_city, current_currency, _, _ = st.session_state.geo_cache
+current_city, current_currency, market_prices, brand_coverages = st.session_state.geo_cache
 
 def get_complementary_color(rgb):
     r, g, b = [x / 255.0 for x in rgb]
@@ -178,7 +215,7 @@ def calculate_mix_options(target_rgb, db, allowed_paints=None):
     paint_names = list(active_db.keys())
     if len(paint_names) == 0: return {}
     
-    neutrals = ["Белила титановые (101)", "Сажа газовая (801)", "Кость жженая (805)", "Шунгит (814)"]
+    neutrals = ["Белила титановые (101)", "Сажа газовая (801)", "База AP (Супербелая)", "База C (Глубокий чёрный/Тон)", "RAL 9016 (Транспортный белый)", "RAL 9005 (Глубокий черный)", "Husky Superwhite (Супербелая)", "Husky База C (Прозрачная под колер)", "Corax White (Белый)", "Abaddon Black (Черный)"]
     mandatory_neutrals = [p for p in neutrals if p in paint_names]
     
     target_rgb_np = np.array(target_rgb, dtype=np.float32)
@@ -240,7 +277,12 @@ if st.session_state.user_role is None:
     if st.button("🧸 Хобби / Роспись и Warhammer", use_container_width=True, type="primary"): st.session_state.user_role = "hobby"; st.rerun()
     st.stop()
 
-role_palettes = ALL_PALETTES if st.session_state.user_role == "hobby" else ({k: v for k, v in ALL_PALETTES.items() if "Citadel" not in k} if st.session_state.user_role == "painter" else {k: v for k, v in ALL_PALETTES.items() if "Citadel" in k})
+if st.session_state.user_role == "painter":
+    role_palettes = {k: v for k, v in ALL_PALETTES.items() if "Невская Палитра" in k}
+elif st.session_state.user_role == "decorator":
+    role_palettes = {k: v for k, v in ALL_PALETTES.items() if "Tikkurila" in k or "RAL" in k or "Husky" in k}
+else:
+    role_palettes = {k: v for k, v in ALL_PALETTES.items() if "Citadel" in k or "Невская Палитра" in k}
 
 col_logo, col_role_reset = st.columns([3, 1])
 with col_role_reset:
@@ -266,7 +308,6 @@ if uploaded_file is not None:
         width, height = base_img.size
         if "pos_x" not in st.session_state: st.session_state.pos_x, st.session_state.pos_y = width // 2, height // 2
 
-        # --- ИСПРАВЛЕННАЯ ОЧЕРЕДНОСТЬ ИНСТРУКЦИЙ ---
         x_min, x_max = max(0, st.session_state.pos_x - r), min(width, st.session_state.pos_x + r)
         y_min, y_max = max(0, st.session_state.pos_y - r), min(height, st.session_state.pos_y + r)
 
@@ -276,7 +317,7 @@ if uploaded_file is not None:
         draw.rectangle([x_min, y_min, x_max, y_max], outline="#ff0000", width=2)
         draw.ellipse([st.session_state.pos_x-3, st.session_state.pos_y-3, st.session_state.pos_x+3, st.session_state.pos_y+3], fill="#ff0000")
 
-        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v39_0")
+        value = streamlit_image_coordinates(marked_img, key="manual_cal_canvas_v41_1")
         if value is not None and (value["x"] != st.session_state.pos_x or value["y"] != st.session_state.pos_y):
             st.session_state.pos_x, st.session_state.pos_y = value["x"], value["y"]; st.session_state.show_results = False; st.rerun()
 
@@ -301,14 +342,12 @@ if uploaded_file is not None:
                 with st.spinner("Глобальное тонально-колористическое картирование..."):
                     small_img = base_img.resize((16, 16), Image.Resampling.LANCZOS)
                     pixels = np.array(small_img, dtype=np.int32).reshape(-1, 3)
-                    
                     quantized = (pixels // 32) * 32
                     unique_colors, counts = np.unique(quantized, axis=0, return_counts=True)
                     sorted_idx = np.argsort(-counts)
                     
                     top_n = min(4, len(unique_colors))
                     total_pixels = np.sum(counts)
-                    
                     global_needs = {}
                     color_blocks = []
                     
@@ -328,7 +367,16 @@ if uploaded_file is not None:
                     st.session_state.global_blocks = color_blocks
                     st.session_state.show_global_results = True; st.session_state.show_results = False; st.rerun()
 
-        # --- ТУТ ПРИМЕНЕНА ОДНОСТРОЧНАЯ HTML-СБОРКА БЕЗ ОШИБОК МАРКДАУНА (v39.0) ---
+        if st.session_state.show_global_results or st.session_state.show_results:
+            if st.session_state.user_role == "decorator":
+                c1, c2 = st.columns(2)
+                with c1: input_area = st.number_input("Площадь помещения (м²):", min_value=0.1, max_value=500.0, value=10.0, step=1.0)
+                with c2: input_layers = st.number_input("Количество слоёв:", min_value=1, max_value=5, value=2, step=1)
+                auto_w = round(input_area * input_layers * brand_coverages.get(selected_brand, 120), 1)
+                total_weight = st.number_input(f"Вес замеса (расход ~{auto_w} г):", min_value=1.0, value=float(auto_w))
+            else:
+                total_weight = 100.0
+
         if st.session_state.show_global_results:
             st.write("### 👁️ Основные массы (Прищуренный взгляд):")
             blocks_html = '<div style="display: flex; gap: 8px; flex-wrap: nowrap; overflow-x: auto; margin-bottom: 15px;">'
@@ -343,7 +391,13 @@ if uploaded_file is not None:
             for paint, percent in sorted_global:
                 if percent > 0.5:
                     p_hex = '#{:02x}{:02x}{:02x}'.format(*role_palettes[selected_brand].get(paint, [128, 128, 128])[:3])
-                    st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: {p_hex};"></div><div style="font-size: 1.05rem; color:#ffffff!important;"><strong style="color:#ffffff!important;">{paint}</strong>: <span style="color: #2ecc71; font-weight: 700;">{percent}%</span></div></div>', unsafe_allow_html=True)
+                    g = round((percent / 100.0) * total_weight, 1)
+                    weight_str = f" → <span style='color: #2ecc71; font-weight: 700;'>{g} г.</span>" if st.session_state.user_role == "decorator" else ""
+                    st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: {p_hex};"></div><div style="font-size: 1.05rem; color:#ffffff!important;"><strong style="color:#ffffff!important;">{paint}</strong>: <span style="color: #2ecc71; font-weight: 700;">{percent}%</span>{weight_str}</div></div>', unsafe_allow_html=True)
+            
+            if st.session_state.user_role == "decorator":
+                cost = round((total_weight / 100.0) * market_prices.get(selected_brand, 150), 2)
+                st.markdown(f'💸 **Приблизительная стоимость базового материала:** `{cost} {current_currency}`')
 
         if st.session_state.show_results and not st.session_state.show_global_results:
             options = st.session_state.saved_options
@@ -368,17 +422,25 @@ if uploaded_file is not None:
                 if data2:
                     st.write("##### ✌️ Рецепт (2 кр.):")
                     for paint, percent in data2['recipe'].items():
-                        st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: #{"{:02x}{:02x}{:02x}".format(*role_palettes[selected_brand].get(paint, [128,128,128])[:3])};"></div><div style="font-size:1.02rem; color:#fff!important;"><strong style="color:#fff!important;">{paint}</strong>:<br><span style="color:#d1d1d6; font-weight:700;">{percent}%</span></div></div>', unsafe_allow_html=True)
+                        g = round((percent / 100.0) * total_weight, 1)
+                        weight_str = f" → <b>{g} г.</b>" if st.session_state.user_role == "decorator" else ""
+                        st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: #{"{:02x}{:02x}{:02x}".format(*role_palettes[selected_brand].get(paint, [128,128,128])[:3])};"></div><div style="font-size:1.02rem; color:#fff!important;"><strong style="color:#fff!important;">{paint}</strong>:<br><span style="color:#d1d1d6; font-weight:700;">{percent}%</span>{weight_str}</div></div>', unsafe_allow_html=True)
             with col_right_recipe:
                 if data3:
                     st.write("##### 🖖 Рецепт (3 кр.):")
                     for paint, percent in data3['recipe'].items():
-                        st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: #{"{:02x}{:02x}{:02x}".format(*role_palettes[selected_brand].get(paint, [128,128,128])[:3])};"></div><div style="font-size:1.02rem; color:#fff!important;"><strong style="color:#fff!important;">{paint}</strong>:<br><span style="color:#d1d1d6; font-weight:700;">{percent}%</span></div></div>', unsafe_allow_html=True)
+                        g = round((percent / 100.0) * total_weight, 1)
+                        weight_str = f" → <b>{g} г.</b>" if st.session_state.user_role == "decorator" else ""
+                        st.markdown(f'<div class="paint-drop-container"><div class="paint-blob" style="background-color: #{"{:02x}{:02x}{:02x}".format(*role_palettes[selected_brand].get(paint, [128,128,128])[:3])};"></div><div style="font-size:1.02rem; color:#fff!important;"><strong style="color:#fff!important;">{paint}</strong>:<br><span style="color:#d1d1d6; font-weight:700;">{percent}%</span>{weight_str}</div></div>', unsafe_allow_html=True)
 
             st.write("### 🔹 Цвета-компаньоны:")
             donut_comp_2 = generate_html_donut_macro(comp_options[2]['recipe'], role_palettes[selected_brand], '#{:02x}{:02x}{:02x}'.format(*[int(np.clip(c * opacity + ground_rgb[i] * (1.0 - opacity), 0, 255)) for i, c in enumerate(get_complementary_color(data2['mixed_rgb']))]), "Компаньон (2 кр.)", f"Глазурь: {tuple([int(np.clip(c * opacity + ground_rgb[i] * (1.0 - opacity), 0, 255)) for i, c in enumerate(get_complementary_color(data2['mixed_rgb']))])}") if data2 and 2 in comp_options else ""
             donut_comp_3 = generate_html_donut_macro(comp_options[3]['recipe'], role_palettes[selected_brand], '#{:02x}{:02x}{:02x}'.format(*[int(np.clip(c * opacity + ground_rgb[i] * (1.0 - opacity), 0, 255)) for i, c in enumerate(get_complementary_color(data3['mixed_rgb']))]), "Компаньон (3 кр.)", f"Глазурь: {tuple([int(np.clip(c * opacity + ground_rgb[i] * (1.0 - opacity), 0, 255)) for i, c in enumerate(get_complementary_color(data3['mixed_rgb']))])}") if data3 and 3 in comp_options else ""
             st.markdown(f'<div style="display: flex; justify-content: space-around; align-items: flex-start; width: 100%; gap: 6px; flex-wrap: nowrap !important; margin-bottom: 10px;"><div style="flex:1; display:flex; justify-content:center;">{donut_comp_2}</div><div style="flex:1; display:flex; justify-content:center;">{donut_comp_3}</div></div>', unsafe_allow_html=True)
+
+            if st.session_state.user_role == "decorator":
+                cost = round((total_weight / 100.0) * market_prices.get(selected_brand, 150), 2)
+                st.markdown(f'💸 **Приблизительная стоимость базового материала:** `{cost} {current_currency}`')
 
             if data3:
                 de = data3['delta_e']
